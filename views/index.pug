@@ -42,9 +42,9 @@ head
         #collapseTwo.collapse(aria-labelledby='headingTwo', data-parent='#accordionSidebar')
           .bg-white.py-2.collapse-inner.rounded
             h6.collapse-header Classes:
-            a.collapse-item(href='/class') English Period 2
-            a.collapse-item(href='/class') English Period 4
-            a.collapse-item(style="text-align:center;",href='/class?method=add')
+            each Class in classes
+              a.collapse-item(href='/class')=Class.className
+            a.collapse-item(style="text-align:center;",href='/addclass')
                 .fas.fa-plus-circle.text-center
       // Nav Item - Utilities Collapse Menu
       li.nav-item

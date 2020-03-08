@@ -9,7 +9,12 @@ catch(error => console.log(error));
 const UsersSchema = new mongoose.Schema({
     name: String,
     email: String,
-    password: String
+    password: String,
+    class: [
+        {
+            className: String
+        }
+    ]
 });
 
 const Users = mongoose.model('Users', UsersSchema, 'Users');

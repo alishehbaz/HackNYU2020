@@ -46,7 +46,11 @@ var auth = function(req, res, next) {
   }
 
 app.get('/', auth,(req,res)=>{
-    res.render('index', {userName: req.session.name, userEmail: req.session.email})
+    User.find({}, (err,data)=>{
+        if(err) throw err
+        var classes = data[0].class
+        res.render('index', {userName: req.session.name, userEmail: req.session.email, classes: classes})
+    })
 })
 
 app.get('/login',notalreadyauth,(req,res)=>{
@@ -108,14 +112,24 @@ app.post('/api/register', (req,res)=>{
 
 //Dashboard
 app.get('/class', auth,(req,res)=>{
-    if(req.query.method === "add") {
-        res.render('class', {createClassModal: true})
-    } else {
         res.render('class')
-    }
-    
 })
 
+app.get('/addclass', auth,(req,res)=>{
+    res.render('addclass')
+})
+
+app.post('/api/addclass', auth, (req,res)=>{
+    let className = req.body.className
+    User.update(
+        { email: req.session.email}, 
+        { $push: {class: {className}}}, (err, data)=>{
+            console.log(err)
+            console.log(data)
+        }
+    )
+    res.redirect('/')
+})
 
 //404 Router
 app.use((req, res, next) => {
