@@ -6,10 +6,11 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const md5 = require('md5')
+const id = require('shortid')
 
 //Mongoose - Mongodb
 const User = require('./models/User')
-mongoose.connect('mongodb://u02zm13zgdt5usfgxe6o:FNvpWyDQNbSSvN2MBi5a@bsa1w0kpy1pg7x4-mongodb.services.clever-cloud.com:27017/bsa1w0kpy1pg7x4')
+mongoose.connect('mongodb://urrarefubd5wsgeopsid:FZJFSB59fFyE0scLQczy@b8myi3588oqnhzj-mongodb.services.clever-cloud.com:27017/b8myi3588oqnhzj')
 
 //App Constants
 const app = express();
@@ -67,7 +68,7 @@ app.get('/logout', function (req, res) {
     res.redirect('/login')
 });
 
-//Aarav smells :)
+//Aarav smells :(
 app.post('/api/login', (req,res)=>{
     let email = req.body.email
     let password = req.body.password
@@ -84,6 +85,7 @@ app.post('/api/login', (req,res)=>{
         }
     })
 })
+//lol
 //Nabeel was here :)
 app.post('/api/register', (req,res)=>{
     let name = req.body.fname+" "+req.body.lname
@@ -112,7 +114,32 @@ app.post('/api/register', (req,res)=>{
 
 //Dashboard
 app.get('/class', auth,(req,res)=>{
-        res.render('class')
+    console.log("CLASS ID: "+req.query.id)
+
+    function searchClass(nameKey, myArray){
+        for (var i=0; i < myArray.length; i++) {
+            if (myArray[i].classId === nameKey) {
+                return myArray[i];
+            }
+        }
+    }
+
+    User.find({email: req.session.email}, (err, data)=>{
+        if(err) throw err
+        let verifedWork = []
+        let classdata = data[0].class
+        let classIndex = searchClass(req.query.id, classdata)
+        User.find({email: req.session.email}, (err, data)=>{
+            if(err) throw err
+            let workdata = data[0].classWork
+            for(let x=0; x< workdata.length; x++){
+                if(workdata[x].classId == req.query.id) {
+                    verifedWork.push(workdata[x])
+                }
+            }
+            res.render('class', {classData: classIndex, workData: verifedWork})
+        })
+    })
 })
 
 app.get('/addclass', auth,(req,res)=>{
@@ -121,9 +148,10 @@ app.get('/addclass', auth,(req,res)=>{
 
 app.post('/api/addclass', auth, (req,res)=>{
     let className = req.body.className
+    let classId = id.generate()
     User.update(
         { email: req.session.email}, 
-        { $push: {class: {className}}}, (err, data)=>{
+        { $push: {class: {classId, className}}}, (err, data)=>{
             console.log(err)
             console.log(data)
         }
@@ -131,6 +159,23 @@ app.post('/api/addclass', auth, (req,res)=>{
     res.redirect('/')
 })
 
+app.post('/api/assignment', auth,(req,res)=>{
+    let classWorkTitle = req.body.assignmenttitle
+    let classWorkDesc = req.body.assignmentdesc
+    var returnURL = (req.headers.referer).replace('http://localhost:5000', '')
+    console.log(returnURL)
+    let classId = returnURL.replace('/class?id=', '')
+    console.log(classWorkTitle, classWorkDesc)
+    User.update(
+        { email: req.session.email}, 
+        { $push: {classWork: {classId, classWorkTitle, classWorkDesc}}}, (err, data)=>{
+            console.log(err)
+            console.log(data)
+        }
+    )
+    res.redirect(returnURL)
+})
+ 
 //404 Router
 app.use((req, res, next) => {
     return res.status(404);

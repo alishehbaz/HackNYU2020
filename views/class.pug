@@ -1,1 +1,32 @@
-h1 CLASS
+script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js')
+script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js')
+link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css')
+#exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+  .modal-dialog(role='document')
+    .modal-content
+      .modal-header
+        h5#exampleModalLabel.modal-title Add Assignments
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+      .modal-body
+        form(action='/api/assignment', method='POST')
+          .form-group
+            label(for='formGroupExampleInput') Assignment Title
+            input#formGroupExampleInput.form-control(type='text', placeholder='Example input', name="assignmenttitle")
+          .form-group
+            label(for='exampleFormControlTextarea1') Assignment Description
+            textarea#exampleFormControlTextarea1.form-control(rows='3', name="assignmentdesc")
+          .modal-footer
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+            input.btn.btn-primary(type='submit' value="Save Changes")
+nav.navbar.navbar-light.bg-light
+  span.navbar-brand.mb-0.h1=classData.className+" - Class Code: "+classData.classId
+  form.form-inline
+    button.btn.btn-outline-success(type='button', data-toggle='modal', data-target='#exampleModal') Add Assignment
+    a.btn.btn-outline-success(href='/', style='color:white; border: none; background-color:maroon; margin-left: 10px;') Home
+.card
+  h5.card-header Classroom Feed:
+  .card-body
+    each Work in workData 
+        h5.card-title=Work.classWorkTitle
+        p.card-text=Work.classWorkDesc
