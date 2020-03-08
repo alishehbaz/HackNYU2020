@@ -26,7 +26,7 @@ head
       hr.sidebar-divider.my-0
       // Nav Item - Dashboard
       li.nav-item.active
-        a.nav-link(href='index.html')
+        a.nav-link(href='/')
           i.fas.fa-fw.fa-tachometer-alt
           span Dashboard
       // Divider
@@ -42,9 +42,9 @@ head
         #collapseTwo.collapse(aria-labelledby='headingTwo', data-parent='#accordionSidebar')
           .bg-white.py-2.collapse-inner.rounded
             h6.collapse-header Classes:
-            a.collapse-item(href='buttons.html') English Period 2
-            a.collapse-item(href='cards.html') English Period 4
-            a.collapse-item(style="text-align:center;",href='cards.html')
+            a.collapse-item(href='/class') English Period 2
+            a.collapse-item(href='/class') English Period 4
+            a.collapse-item(style="text-align:center;",href='/class?method=add')
                 .fas.fa-plus-circle.text-center
       // Nav Item - Utilities Collapse Menu
       li.nav-item
@@ -144,6 +144,25 @@ head
                 |                   Logout
       // End of Topbar
       // Begin Page Content
+      if createClassModal
+        #exampleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+          .modal-dialog(role='document')
+            .modal-content
+              .modal-header
+                h5#exampleModalLabel.modal-title New message
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                  span(aria-hidden='true') &times;
+              .modal-body
+                form
+                  .form-group
+                    label.col-form-label(for='recipient-name') Recipient:
+                    input#recipient-name.form-control(type='text')
+                  .form-group
+                    label.col-form-label(for='message-text') Message:
+                    textarea#message-text.form-control
+              .modal-footer
+                button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+                button.btn.btn-primary(type='button') Send message
       .container-fluid
         // Page Heading
         .d-sm-flex.align-items-center.justify-content-between.mb-4

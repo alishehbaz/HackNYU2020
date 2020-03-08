@@ -106,6 +106,17 @@ app.post('/api/register', (req,res)=>{
     }
 })
 
+//Dashboard
+app.get('/class', auth,(req,res)=>{
+    if(req.query.method === "add") {
+        res.render('class', {createClassModal: true})
+    } else {
+        res.render('class')
+    }
+    
+})
+
+
 //404 Router
 app.use((req, res, next) => {
     return res.status(404);
