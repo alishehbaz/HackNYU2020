@@ -46,7 +46,7 @@ var auth = function(req, res, next) {
   }
 
 app.get('/', auth,(req,res)=>{
-    res.send("you are logged in: "+req.session.name)
+    res.render('index', {userName: req.session.name, userEmail: req.session.email})
 })
 
 app.get('/login',notalreadyauth,(req,res)=>{
@@ -69,7 +69,7 @@ app.post('/api/login', (req,res)=>{
     let password = req.body.password
     User.find({email: email, password: md5(password)}, (err, data)=>{
         if(err) throw err
-        console.log(data)
+        console.log("Logged in: "+data)
         if(data[0]) {
             req.session.name = data[0].name
             req.session.email = email
